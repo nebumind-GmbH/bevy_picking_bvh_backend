@@ -1,3 +1,5 @@
+// Copied from Bevy 0.15 official examples, and patched to use this plugin
+
 //! A simple 3D scene to demonstrate mesh picking.
 //!
 //! [`bevy::picking::backend`] provides an API for adding picking hit tests to any entity. To get
@@ -26,7 +28,6 @@ use bevy_picking_bvh_backend::PickingBvhBackend;
 
 fn main() {
     App::new()
-        // MeshPickingPlugin is not a default plugin
         .add_plugins((DefaultPlugins, PickingBvhBackend))
         .add_systems(Startup, setup_scene)
         .add_systems(Update, (draw_mesh_intersections, rotate))
