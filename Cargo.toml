@@ -1,0 +1,33 @@
+[package]
+name = "bevy_picking_bvh_backend"
+version = "0.1.0"
+edition = "2021"
+authors = ["Romain Lamarche <lamarcheromain@gmail.com>"]
+license = "MIT"
+description = "A picking backend plugin for Bevy which uses a BVH tree to improve performances."
+resolver = "2"
+
+
+[dependencies]
+bevy_log = "0.15"
+bevy_math = "0.15"
+bevy_asset = "0.15"
+bevy_derive = "0.15"
+bevy_utils = "0.15"
+bevy_app = "0.15"
+bevy_transform = "0.15"
+bevy_scene = "0.15"
+bevy_hierarchy = "0.15"
+bevy_render = "0.15"
+bevy_ecs = "0.15"
+bevy_reflect = "0.15"
+bevy_picking = "0.15"
+bevy_tasks = "0.15"
+# Need to use the latest version because there is a bug making it not working on cubes (for example)
+bvh = { git = "https://github.com/svenstaro/bvh" }
+futures-lite = "2.0.1"
+nalgebra = "0.33.2"
+crossbeam-channel = "0.5.14"
+
+[dev-dependencies]
+bevy = "0.15"
