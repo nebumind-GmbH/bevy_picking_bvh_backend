@@ -3,7 +3,7 @@ use bevy_picking_bvh_backend::PickingBvhBackend;
 
 fn main() {
     App::new()
-        .add_plugins((DefaultPlugins, PickingBvhBackend))
+        .add_plugins((DefaultPlugins, PickingBvhBackend::default()))
         .add_systems(Startup, setup_scene)
         .add_systems(Update, draw_mesh_intersections)
         .run();
@@ -29,9 +29,12 @@ fn setup_scene(mut commands: Commands, asset_server: Res<AssetServer>) {
     ));
 
     commands
-        .spawn((SceneRoot(asset_server.load(
-            GltfAssetLabel::Scene(0).from_asset("models/dragon_high.glb"),
-        )),))
+        .spawn((
+            SceneRoot(
+                asset_server.load(GltfAssetLabel::Scene(0).from_asset("models/dragon_high.glb")),
+            ),
+            Transform::from_scale(Vec3::splat(3.)),
+        ))
         .observe(rotate_on_drag);
 }
 

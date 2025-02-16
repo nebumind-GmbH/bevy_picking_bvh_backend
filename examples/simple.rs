@@ -28,7 +28,7 @@ use bevy_picking_bvh_backend::PickingBvhBackend;
 
 fn main() {
     App::new()
-        .add_plugins((DefaultPlugins, PickingBvhBackend))
+        .add_plugins((DefaultPlugins, PickingBvhBackend::default()))
         .add_systems(Startup, setup_scene)
         .add_systems(Update, (draw_mesh_intersections, rotate))
         .run();

@@ -1,7 +1,5 @@
 use bevy_app::prelude::*;
-use bevy_asset::prelude::*;
 use bevy_ecs::{prelude::*, world::CommandQueue};
-use bevy_log::prelude::*;
 use bevy_picking::{
     backend::{ray::RayMap, HitData, PointerHits},
     mesh_picking::{
@@ -11,21 +9,62 @@ use bevy_picking::{
     PickSet, PickingBehavior,
 };
 use bevy_reflect::prelude::*;
-use bevy_render::{prelude::*, primitives::Aabb, view::RenderLayers};
+use bevy_render::{prelude::*, view::RenderLayers};
 use bevy_tasks::{prelude::*, Task};
-use bevy_transform::components::GlobalTransform;
-use bvh::{build_bvh_cache, ray_cast::BvhMeshRayCast, BvhCache};
+#[cfg(feature = "bvh")]
+use bvh::{compute_bvh_cache_assets, BvhCache};
 use futures_lite::future;
 
+#[cfg(feature = "obvhs")]
+use obvhs::{compute_obvhs_bvh2_cache_assets, ObvhsBvh2Cache};
+use ray_cast::MeshRayCast;
+#[cfg(any(feature = "obvhs", feature = "bvh"))]
+use storage::AssetsBvhCaches;
+
+pub mod storage;
+
+#[cfg(feature = "bvh")]
 pub mod bvh;
 
-#[derive(Copy, Clone, Debug, Resource, Reflect)]
-#[reflect(Resource, Default, Debug)]
-pub struct PickingBvhBackend;
+#[cfg(feature = "obvhs")]
+pub mod obvhs;
 
-impl Default for PickingBvhBackend {
+pub mod common;
+pub mod ray_cast;
+
+#[derive(Clone, Debug, Reflect)]
+pub enum BvhBackend {
+    None,
+    #[cfg(feature = "bvh")]
+    Bvh,
+    #[cfg(feature = "obvhs")]
+    ObvhsBvh2,
+}
+
+impl Default for BvhBackend {
+    #[cfg(all(not(feature = "obvhs"), not(feature = "bvh")))]
     fn default() -> Self {
-        Self {}
+        Self::None
+    }
+    #[cfg(all(not(feature = "obvhs"), feature = "bvh"))]
+    fn default() -> Self {
+        Self::Bvh
+    }
+    #[cfg(feature = "obvhs")]
+    fn default() -> Self {
+        Self::ObvhsBvh2
+    }
+}
+
+#[derive(Clone, Debug, Default, Resource, Reflect)]
+#[reflect(Resource, Default, Debug)]
+pub struct PickingBvhBackend {
+    backend: BvhBackend,
+}
+
+impl PickingBvhBackend {
+    pub fn with_backend(backend: BvhBackend) -> Self {
+        Self { backend }
     }
 }
 
@@ -36,64 +75,22 @@ impl Plugin for PickingBvhBackend {
             .init_resource::<MeshPickingSettings>()
             .register_type::<(RayCastPickable, MeshPickingSettings, SimplifiedMesh)>()
             // register our systems
-            .add_systems(PreUpdate, compute_bvh_cache)
             .add_systems(PreUpdate, update_hits.in_set(PickSet::Backend))
             .add_systems(Update, handle_tasks);
-    }
-}
 
-#[derive(Component)]
-struct BuildingBvhCache;
-
-/// Detect new assets and generate BVH tree
-fn compute_bvh_cache(
-    mut commands: Commands,
-    mesh_3ds_to_load: Query<Entity, (With<Mesh3d>, Without<BuildingBvhCache>, Without<BvhCache>)>,
-    mesh_3ds: Query<(&Mesh3d, &Aabb, &GlobalTransform)>,
-    meshes: Res<Assets<Mesh>>,
-) {
-    // Iterate over mesh 3ds
-    for entity in mesh_3ds_to_load.iter() {
-        if let Ok((mesh_3d, _aabb, _global_transform)) = mesh_3ds.get(entity) {
-            info!("Entity {} mesh {}", entity.index(), mesh_3d.id());
-
-            let Some(mesh) = meshes.get(mesh_3d) else {
-                warn!("Missing mesh for mesh_3d {}", mesh_3d.id());
-                continue;
-            };
-
-            let thread_pool = AsyncComputeTaskPool::get();
-
-            let task_entity = commands.spawn_empty().id();
-            let task = thread_pool.spawn({
-                // We need to clone the mesh to be able to process it asynchronously
-                let mesh = mesh.clone();
-                async move {
-                    let mut command_queue = CommandQueue::default();
-
-                    info!("Building BVH cache...");
-                    let bvh_cache = build_bvh_cache(&mesh);
-                    info!("BVH cache built.");
-
-                    if let Some(bvh_cache) = bvh_cache {
-                        command_queue.push(move |world: &mut World| {
-                            world
-                                .entity_mut(entity)
-                                // add the bvh cache to the mesh
-                                .insert(bvh_cache)
-                                // remove the marker BuildingBvhCache
-                                .remove::<BuildingBvhCache>();
-                        })
-                    }
-
-                    command_queue
-                }
-            });
-            commands.entity(entity).insert(BuildingBvhCache);
-
-            // Spawn new entity and add our new task as a component
-            commands.entity(task_entity).insert(ComputeBvhCache(task));
+        #[cfg(feature = "bvh")]
+        {
+            app.add_systems(PreUpdate, compute_bvh_cache_assets);
+            app.insert_resource(AssetsBvhCaches::<Mesh, BvhCache>::default());
         }
+
+        #[cfg(feature = "obvhs")]
+        {
+            app.add_systems(PreUpdate, compute_obvhs_bvh2_cache_assets);
+            app.insert_resource(AssetsBvhCaches::<Mesh, ObvhsBvh2Cache>::default());
+        }
+
+        app.insert_resource(self.clone());
     }
 }
 
@@ -127,7 +124,7 @@ pub fn update_hits(
     pickables: Query<&PickingBehavior>,
     marked_targets: Query<&RayCastPickable>,
     layers: Query<&RenderLayers>,
-    mut ray_cast: BvhMeshRayCast,
+    mut ray_cast: MeshRayCast,
     mut output: EventWriter<PointerHits>,
 ) {
     for (&ray_id, &ray) in ray_map.map().iter() {
@@ -163,6 +160,7 @@ pub fn update_hits(
                     .is_ok_and(|pickable| pickable.should_block_lower)
             },
         };
+
         let picks = ray_cast
             .cast_ray(ray, &settings)
             .iter()
@@ -177,6 +175,7 @@ pub fn update_hits(
             })
             .collect::<Vec<_>>();
         let order = camera.order as f32;
+
         if !picks.is_empty() {
             output.send(PointerHits::new(ray_id.pointer, picks, order));
         }

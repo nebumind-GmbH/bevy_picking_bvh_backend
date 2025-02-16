@@ -1,34 +1,35 @@
 use bevy_asset::prelude::*;
 use bevy_ecs::{prelude::*, world::CommandQueue};
 use bevy_log::prelude::*;
-use bevy_tasks::prelude::*;
-
 use bevy_render::{
     mesh::{Indices, PrimitiveTopology},
     prelude::*,
 };
-
-use bvh::bvh::Bvh;
-use triangle::BVHTriangle;
+use bevy_tasks::prelude::*;
+use obvhs::{
+    bvh2::{builder::build_bvh2_from_tris, Bvh2},
+    triangle::Triangle as ObvhTriangle,
+    BvhBuildParams,
+};
+use std::time::Duration;
 
 use crate::{
-    common::get_triangles,
+    common::{get_triangles, triangle::Triangle},
     storage::{AssetBvhCache, AssetsBvhCaches},
     ComputeBvhCache,
 };
 
 pub mod ray_cast;
-mod triangle;
 
-pub struct BvhCache {
-    pub bvh: Bvh<f32, 3>,
-    pub triangles: Vec<triangle::BVHTriangle>,
+pub struct ObvhsBvh2Cache {
+    pub bvh: Bvh2,
+    pub triangles: Vec<Triangle>,
 }
 
-impl AssetBvhCache for BvhCache {}
+impl AssetBvhCache for ObvhsBvh2Cache {}
 
 /// Detect new assets and generate BVH tree
-pub fn compute_bvh_cache_assets(
+pub fn compute_obvhs_bvh2_cache_assets(
     mut commands: Commands,
     mut asset_events: EventReader<AssetEvent<Mesh>>,
     meshes: Res<Assets<Mesh>>,
@@ -51,14 +52,14 @@ pub fn compute_bvh_cache_assets(
                     async move {
                         let mut command_queue = CommandQueue::default();
 
-                        info!("Building BVH cache...");
-                        let bvh_cache = build_bvh_cache(&mesh);
-                        info!("BVH cache built.");
+                        info!("Building Obvhs Bvh2 cache...");
+                        let bvh_cache = build_bvh2_cache(&mesh);
+                        info!("Obvhs Bvh2 cache built.");
 
                         if let Some(bvh_cache) = bvh_cache {
                             command_queue.push(move |world: &mut World| {
                                 let mut bvh_caches =
-                                    world.resource_mut::<AssetsBvhCaches<Mesh, BvhCache>>();
+                                    world.resource_mut::<AssetsBvhCaches<Mesh, ObvhsBvh2Cache>>();
                                 bvh_caches.insert(asset_id, bvh_cache);
                             })
                         }
@@ -74,7 +75,7 @@ pub fn compute_bvh_cache_assets(
     }
 }
 
-fn build_bvh_cache(mesh: &Mesh) -> Option<BvhCache> {
+fn build_bvh2_cache(mesh: &Mesh) -> Option<ObvhsBvh2Cache> {
     if mesh.primitive_topology() != PrimitiveTopology::TriangleList {
         warn!("No triangle list topology");
         return None; // ray_mesh_intersection assumes vertices are laid out in a triangle list
@@ -97,15 +98,29 @@ fn build_bvh_cache(mesh: &Mesh) -> Option<BvhCache> {
         get_triangles::<u16>(positions, normals, None)
     };
 
-    // Convert triangles to the correct type
-    let mut triangles = triangles
-        .into_iter()
-        .map(BVHTriangle::from_triangle)
+    // Skip building this cache if not enough triangles
+    if triangles.len() < 64 {
+        info!("Skip building obvhs ovh2 cache, not enough triangles.");
+        return None;
+    }
+
+    let obvhs_triangles = triangles
+        .iter()
+        .map(|t| ObvhTriangle {
+            v0: t.positions[0].into(),
+            v1: t.positions[1].into(),
+            v2: t.positions[2].into(),
+        })
         .collect::<Vec<_>>();
 
     info!("Triangle count: {}", triangles.len());
 
-    let bvh = Bvh::build(&mut triangles);
+    // TODO: make build params configurable at plugin level
+    let bvh = build_bvh2_from_tris(
+        &obvhs_triangles,
+        BvhBuildParams::medium_build(),
+        &mut Duration::default(),
+    );
 
-    Some(BvhCache { bvh, triangles })
+    Some(ObvhsBvh2Cache { bvh, triangles })
 }
