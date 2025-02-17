@@ -23,8 +23,8 @@ bevy_ecs = "0.15"
 bevy_reflect = "0.15"
 bevy_picking = "0.15"
 bevy_tasks = "0.15"
-# Need to use the latest version because there is a bug making it not working on cubes (for example)
-bvh = { git = "https://github.com/svenstaro/bvh", optional = true }
+# Warn: this version does not work well with cube for example (for AABB with width/height/depth of 0 more generally)
+bvh = { version = "0.10.0", optional = true }
 futures-lite = "2.0.1"
 nalgebra = { version = "0.33.2", optional = true }
 crossbeam-channel = "0.5.14"
