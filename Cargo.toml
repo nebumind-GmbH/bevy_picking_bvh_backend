@@ -21,7 +21,7 @@ bevy_hierarchy = "0.15"
 bevy_render = "0.15"
 bevy_ecs = "0.15"
 bevy_reflect = "0.15"
-bevy_picking = "0.15"
+bevy_picking = { version = "0.15", features = ["bevy_mesh_picking_backend"] }
 bevy_tasks = "0.15"
 # Warn: this version does not work well with cube for example (for AABB with width/height/depth of 0 more generally)
 bvh = { version = "0.10.0", optional = true }
