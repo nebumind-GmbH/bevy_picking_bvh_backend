@@ -19,7 +19,7 @@ use rand_chacha::{
 #[test]
 fn run_bench() {
     // bench(vec!["models/dragon_high.glb".to_string()]);
-    bench(vec!["models/raie.glb".to_string()]);
+    bench(vec!["models/dragon_high.glb".to_string()]);
 }
 
 fn bench(meshes: Vec<String>) {
