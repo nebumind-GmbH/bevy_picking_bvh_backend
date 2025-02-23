@@ -1,6 +1,6 @@
 [package]
 name = "bevy_picking_bvh_backend"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Romain Lamarche <lamarcheromain@gmail.com>"]
 license = "MIT"
@@ -32,7 +32,10 @@ obvhs = { version = "0.2.0", features = ["parallel"], optional = true }
 uuid = { version = "1", features = ["v4"] }
 
 [dev-dependencies]
-bevy = "0.15"
+bevy = { version = "0.15" }
+bevy_panorbit_camera = "0.23.0"
+rand = "0.8.0"
+rand_chacha = "0.3.1"
 
 [features]
 default = ["obvhs"]

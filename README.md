@@ -24,3 +24,21 @@ Then run the `dragon_high` sample:
 ```bash
 cargo run --example dragon_high --release
 ```
+
+## Running the benchmark
+
+By default, the benchmark uses the "dragon_high.glb" mesh upper. But you can easily change it in the `tests/bench.rs` file.
+
+You can even add multiple meshes.
+
+How it works ?
+
+- First an app is initialized with the desired meshes, then the process waits for the app to be ready (meshes loaded and bvh caches generated).
+- Then random rays are spawned from a random position on the aabb boundary of a randomly picked mesh to a random position on this mesh using the `UniformMeshSampler` from Bevy
+- When the desired number of raycasts is reached, the loop exits and basic statistics are printed.
+- Then the backend is changed in the same running app, and another bench is run.
+- Each backends available on the selected features is benchmarked
+
+1000 rays are spawned for the `None` backend (default mesh picking in Bevy 0.15), then 10000 rays for each other backends.
+
+The result is a **1000x performance boost** for the `dragon_high.glb` mesh.

@@ -52,9 +52,10 @@ pub fn compute_obvhs_bvh2_cache_assets(
                     async move {
                         let mut command_queue = CommandQueue::default();
 
-                        info!("Building Obvhs Bvh2 cache...");
+                        let build_obvhs_bvh2_cache = info_span!("build_obvhs_bvh2_cache");
+                        let build_obvhs_bvh2_cache_guard = build_obvhs_bvh2_cache.enter();
                         let bvh_cache = build_bvh2_cache(&mesh);
-                        info!("Obvhs Bvh2 cache built.");
+                        drop(build_obvhs_bvh2_cache_guard);
 
                         if let Some(bvh_cache) = bvh_cache {
                             command_queue.push(move |world: &mut World| {
@@ -100,7 +101,6 @@ fn build_bvh2_cache(mesh: &Mesh) -> Option<ObvhsBvh2Cache> {
 
     // Skip building this cache if not enough triangles
     if triangles.len() < 64 {
-        info!("Skip building obvhs ovh2 cache, not enough triangles.");
         return None;
     }
 
@@ -112,8 +112,6 @@ fn build_bvh2_cache(mesh: &Mesh) -> Option<ObvhsBvh2Cache> {
             v2: t.positions[2].into(),
         })
         .collect::<Vec<_>>();
-
-    info!("Triangle count: {}", triangles.len());
 
     // TODO: make build params configurable at plugin level
     let bvh = build_bvh2_from_tris(

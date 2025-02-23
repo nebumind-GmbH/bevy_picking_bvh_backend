@@ -51,9 +51,10 @@ pub fn compute_bvh_cache_assets(
                     async move {
                         let mut command_queue = CommandQueue::default();
 
-                        info!("Building BVH cache...");
+                        let build_bvh_cache_span = info_span!("build_bvh_cache");
+                        let build_bvh_cache_guard = build_bvh_cache_span.enter();
                         let bvh_cache = build_bvh_cache(&mesh);
-                        info!("BVH cache built.");
+                        drop(build_bvh_cache_guard);
 
                         if let Some(bvh_cache) = bvh_cache {
                             command_queue.push(move |world: &mut World| {
@@ -102,8 +103,6 @@ fn build_bvh_cache(mesh: &Mesh) -> Option<BvhCache> {
         .into_iter()
         .map(BVHTriangle::from_triangle)
         .collect::<Vec<_>>();
-
-    info!("Triangle count: {}", triangles.len());
 
     let bvh = Bvh::build(&mut triangles);
 

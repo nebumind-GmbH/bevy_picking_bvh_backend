@@ -85,7 +85,7 @@ type MeshFilter = Or<(With<Mesh3d>, With<Mesh2d>, With<SimplifiedMesh>)>;
 /// }
 /// ```
 #[derive(SystemParam)]
-pub struct MeshRayCast<'w, 's> {
+pub struct BvhMeshRayCast<'w, 's> {
     #[doc(hidden)]
     pub meshes: Res<'w, Assets<Mesh>>,
     #[cfg(feature = "bvh")]
@@ -130,7 +130,7 @@ pub struct MeshRayCast<'w, 's> {
     >,
 }
 
-impl<'w, 's> MeshRayCast<'w, 's> {
+impl<'w, 's> BvhMeshRayCast<'w, 's> {
     /// Casts the `ray` into the world and returns a sorted list of intersections, nearest first.
     pub fn cast_ray(&mut self, ray: Ray3d, settings: &RayCastSettings) -> &[(Entity, RayMeshHit)] {
         let ray_cull = info_span!("ray culling");
