@@ -3,6 +3,7 @@ name = "bevy_picking_bvh_backend"
 version = "0.1.1"
 edition = "2021"
 authors = ["Romain Lamarche <lamarcheromain@gmail.com>"]
+repository = "https://github.com/rlamarche/bevy_picking_bvh_backend"
 license = "MIT"
 description = "A picking backend plugin for Bevy which uses a BVH tree to improve performances."
 resolver = "2"
