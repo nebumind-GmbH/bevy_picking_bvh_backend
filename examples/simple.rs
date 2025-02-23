@@ -24,11 +24,15 @@
 use std::f32::consts::PI;
 
 use bevy::{color::palettes::tailwind::*, picking::pointer::PointerInteraction, prelude::*};
-use bevy_picking_bvh_backend::PickingBvhBackend;
+use bevy_picking_bvh_backend::{mesh_picking::MeshPickingBvhPlugin, PickingBvhBackend};
 
 fn main() {
     App::new()
-        .add_plugins((DefaultPlugins, PickingBvhBackend::default()))
+        .add_plugins((
+            DefaultPlugins,
+            PickingBvhBackend::default(),
+            MeshPickingBvhPlugin,
+        ))
         .add_systems(Startup, setup_scene)
         .add_systems(Update, (draw_mesh_intersections, rotate))
         .run();
