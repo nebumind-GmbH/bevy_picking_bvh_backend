@@ -1,0 +1,14 @@
+[build]
+# switch these arround for greying out active/inactive code in vscode
+# target = "x86_64-unknown-linux-gnu"
+target = "wasm32-unknown-unknown"
+# target_arch = "wasm32"
+
+[target.wasm32-unknown-unknown]
+rustflags = [
+  #"-Clink-args=-z stack-size=1500000",
+  "-Clink-arg=--initial-memory=2147483648", # 2GB 2147483648
+  "-Clink-arg=--max-memory=4294967296", # 4GB 4294967296
+  #"--cfg=web_sys_unstable_apis"
+]
+

@@ -14,7 +14,6 @@ use obvhs::{compute_obvhs_bvh2_cache_assets, ObvhsBvh2Cache};
 use storage::AssetsBvhCaches;
 
 pub mod mesh_picking;
-
 pub mod storage;
 
 #[cfg(feature = "bvh")]

@@ -74,13 +74,17 @@ bevy_utils = "0.15.3"
 bevy_window = "0.15.3"
 bevy_picking_more_hitinfo = { path = "../bevy_picking_more_hitinfo"}
 #git ="https://github.com/nebumind-GmbH/bevy_picking_more_hitinfo.git" }
+
 # Warn: this version does not work well with cube for example (for AABB with width/height/depth of 0 more generally)
 bvh = { version = "0.10.0", optional = true }
 futures-lite = "2.0.1"
 nalgebra = { version = "0.33.2", optional = true }
 crossbeam-channel = "0.5.14"
-obvhs = { version = "0.2.0", features = ["parallel"], optional = true }
+obvhs = { path = "../obvhs", features = ["parallel"], optional = true }
+# obvhs = { version = "0.2.0", features = ["parallel"], optional = true }
 uuid = { version = "1", features = ["v4"] }
+web-time = { version = "1.1" }
+
 
 [dev-dependencies]
 bevy_app = "0.15.3"
@@ -150,6 +154,8 @@ bevy_picking_more_hitinfo = { path = "../bevy_picking_more_hitinfo"}
 bevy_panorbit_camera = "0.23.0"
 rand = "0.8.0"
 rand_chacha = "0.3.1"
+
+web-time = { version = "1.1" }
 
 [features]
 default = ["obvhs"]

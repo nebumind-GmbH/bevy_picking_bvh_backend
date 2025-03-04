@@ -882,6 +882,7 @@ dependencies = [
  "rand",
  "rand_chacha",
  "uuid",
+ "web-time",
 ]
 
 [[package]]
@@ -3109,14 +3110,13 @@ dependencies = [
 [[package]]
 name = "obvhs"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "96831b0c2386d37ee14731a382554956523a1fc202a26aff9fa0b34a6450d583"
 dependencies = [
  "bytemuck",
  "glam",
  "half",
  "rayon",
  "rdst",
+ "web-time",
 ]
 
 [[package]]
