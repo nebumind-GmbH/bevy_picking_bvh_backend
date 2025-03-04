@@ -5,7 +5,7 @@
 pub mod intersections;
 
 use bevy_math::{bounding::Aabb3d, Ray3d};
-use bevy_picking::mesh_picking::ray_cast::{
+use bevy_picking_more_hitinfo::mesh_picking::ray_cast::{
     ray_aabb_intersection_3d, Backfaces, RayCastBackfaces, RayCastSettings, RayCastVisibility,
     RayMeshHit, SimplifiedMesh,
 };
@@ -44,7 +44,7 @@ type MeshFilter = Or<(With<Mesh3d>, With<Mesh2d>, With<SimplifiedMesh>)>;
 ///
 /// ```
 /// # use bevy_math::prelude::*;
-/// # use bevy_picking::prelude::*;
+/// # use bevy_picking_more_hitinfo::prelude::*;
 /// fn ray_cast_system(mut ray_cast: MeshRayCast) {
 ///     let ray = Ray3d::new(Vec3::ZERO, Dir3::X);
 ///     let hits = ray_cast.cast_ray(ray, &RayCastSettings::default());
@@ -60,7 +60,7 @@ type MeshFilter = Or<(With<Mesh3d>, With<Mesh2d>, With<SimplifiedMesh>)>;
 /// ```
 /// # use bevy_ecs::prelude::*;
 /// # use bevy_math::prelude::*;
-/// # use bevy_picking::prelude::*;
+/// # use bevy_picking_more_hitinfo::prelude::*;
 /// # #[derive(Component)]
 /// # struct Foo;
 /// fn ray_cast_system(mut ray_cast: MeshRayCast, foo_query: Query<(), With<Foo>>) {

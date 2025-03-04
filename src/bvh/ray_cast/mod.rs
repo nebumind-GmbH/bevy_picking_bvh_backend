@@ -1,5 +1,5 @@
 use bevy_math::{Dir3, Mat4, Ray3d};
-use bevy_picking::mesh_picking::ray_cast::{Backfaces, RayMeshHit};
+use bevy_picking_more_hitinfo::mesh_picking::ray_cast::{Backfaces, RayMeshHit};
 
 use crate::{bvh::BvhCache, ray_cast::intersections::triangle_intersection};
 

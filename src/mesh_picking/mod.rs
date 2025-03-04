@@ -1,6 +1,6 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use bevy_picking::{
+use bevy_picking_more_hitinfo::{
     backend::{ray::RayMap, HitData, PointerHits},
     mesh_picking::{
         ray_cast::{RayCastSettings, SimplifiedMesh},
@@ -36,6 +36,8 @@ pub fn update_hits(
     mut ray_cast: BvhMeshRayCast,
     mut output: EventWriter<PointerHits>,
 ) {
+    println!("update_hits");
+
     for (&ray_id, &ray) in ray_map.map().iter() {
         let Ok((camera, cam_pickable, cam_layers)) = picking_cameras.get(ray_id.camera) else {
             continue;
@@ -79,6 +81,7 @@ pub fn update_hits(
                     hit.distance,
                     Some(hit.point),
                     Some(hit.normal),
+                    hit.triangle_index,
                 );
                 (*entity, hit_data)
             })
@@ -86,6 +89,7 @@ pub fn update_hits(
         let order = camera.order as f32;
 
         if !picks.is_empty() {
+            println!("output.send");
             output.send(PointerHits::new(ray_id.pointer, picks, order));
         }
     }

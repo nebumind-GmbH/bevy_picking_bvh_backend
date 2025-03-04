@@ -10,20 +10,70 @@ resolver = "2"
 
 
 [dependencies]
-bevy_log = "0.15"
-bevy_math = "0.15"
-bevy_asset = "0.15"
-bevy_derive = "0.15"
-bevy_utils = "0.15"
-bevy_app = "0.15"
-bevy_transform = "0.15"
-bevy_scene = "0.15"
-bevy_hierarchy = "0.15"
-bevy_render = "0.15"
-bevy_ecs = "0.15"
-bevy_reflect = "0.15"
-bevy_picking = { version = "0.15", features = ["bevy_mesh_picking_backend"] }
-bevy_tasks = "0.15"
+bevy_app = "0.15.3"
+bevy_asset = "0.15.3"
+bevy_animation = "0.15.3"
+bevy_color = "0.15.3"
+bevy_core = "0.15.3"
+bevy_core_pipeline = "0.15.3"
+bevy_derive = "0.15.3"
+bevy_ecs = "0.15.3"
+bevy_gizmos = "0.15.3"
+bevy_hierarchy = "0.15.3"
+bevy_input = "0.15.3"
+bevy_internal = { version="0.15.3", features = [
+  # "android-game-activity",
+  # "android-game-activity",
+  # "android_shared_stdcxx",
+  "animation",
+  "bevy_asset",
+  # "bevy_audio",
+  "bevy_color",
+  "bevy_core_pipeline",
+  # "bevy_gilrs",
+  "bevy_gizmos",
+  "bevy_gltf",
+  # "bevy_mesh_picking_backend",
+  "bevy_pbr",
+  # "bevy_picking",
+  "bevy_render",
+  "bevy_scene",
+  # "bevy_sprite",
+  "bevy_sprite_picking_backend",
+  "bevy_state",
+  "bevy_text",
+  "bevy_ui",
+  # "bevy_ui_picking_backend",
+  "bevy_window",
+  "bevy_winit",
+  # "custom_cursor",
+  "default_font",
+  "hdr",
+  "multi_threaded",
+  "png",
+  "smaa_luts",
+  # "sysinfo_plugin",
+  "tonemapping_luts",
+  # "vorbis",
+  "webgl",
+  "x11"
+]}
+bevy_math = "0.15.3"
+bevy_mesh = "0.15.3"
+bevy_log = "0.15.3"
+bevy_pbr = "0.15.3"
+bevy_reflect = "0.15.3"
+bevy_render = "0.15.3"
+bevy_sprite = "0.15.3"
+bevy_text = "0.15.3"
+bevy_time = "0.15.3"
+bevy_transform = "0.15.3"
+bevy_tasks = "0.15.3"
+# bevy_ui = "0.15.3"
+bevy_utils = "0.15.3"
+bevy_window = "0.15.3"
+bevy_picking_more_hitinfo = { path = "../bevy_picking_more_hitinfo"}
+#git ="https://github.com/nebumind-GmbH/bevy_picking_more_hitinfo.git" }
 # Warn: this version does not work well with cube for example (for AABB with width/height/depth of 0 more generally)
 bvh = { version = "0.10.0", optional = true }
 futures-lite = "2.0.1"
@@ -33,7 +83,70 @@ obvhs = { version = "0.2.0", features = ["parallel"], optional = true }
 uuid = { version = "1", features = ["v4"] }
 
 [dev-dependencies]
-bevy = { version = "0.15" }
+bevy_app = "0.15.3"
+bevy_asset = "0.15.3"
+bevy_animation = "0.15.3"
+bevy_color = "0.15.3"
+bevy_core = "0.15.3"
+bevy_core_pipeline = "0.15.3"
+bevy_derive = "0.15.3"
+bevy_ecs = "0.15.3"
+bevy_gizmos = "0.15.3"
+bevy_hierarchy = "0.15.3"
+bevy_input = "0.15.3"
+bevy_internal = { version="0.15.3", features = [
+  # "android-game-activity",
+  # "android-game-activity",
+  # "android_shared_stdcxx",
+  "animation",
+  "bevy_asset",
+  # "bevy_audio",
+  "bevy_color",
+  "bevy_core_pipeline",
+  # "bevy_gilrs",
+  "bevy_gizmos",
+  # "bevy_gltf",
+  # "bevy_mesh_picking_backend",
+  "bevy_pbr",
+  # "bevy_picking",
+  "bevy_render",
+  "bevy_scene",
+  # "bevy_sprite",
+  "bevy_sprite_picking_backend",
+  "bevy_state",
+  "bevy_text",
+  "bevy_ui",
+  # "bevy_ui_picking_backend",
+  "bevy_window",
+  "bevy_winit",
+  # "custom_cursor",
+  "default_font",
+  "hdr",
+  "multi_threaded",
+  "png",
+  "smaa_luts",
+  # "sysinfo_plugin",
+  "tonemapping_luts",
+  # "vorbis",
+  "webgl",
+  "x11"
+]}
+bevy_math = "0.15.3"
+bevy_mesh = "0.15.3"
+bevy_log = "0.15.3"
+bevy_pbr = "0.15.3"
+bevy_reflect = "0.15.3"
+bevy_render = "0.15.3"
+bevy_sprite = "0.15.3"
+bevy_tasks = "0.15.3"
+bevy_text = "0.15.3"
+bevy_time = "0.15.3"
+bevy_transform = "0.15.3"
+# bevy_ui = "0.15.3"
+bevy_utils = "0.15.3"
+bevy_window = "0.15.3"
+
+bevy_picking_more_hitinfo = { path = "../bevy_picking_more_hitinfo"}
 bevy_panorbit_camera = "0.23.0"
 rand = "0.8.0"
 rand_chacha = "0.3.1"

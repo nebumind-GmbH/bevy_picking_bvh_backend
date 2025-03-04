@@ -1,5 +1,5 @@
 use bevy_math::{Mat4, Ray3d, Vec3};
-use bevy_picking::mesh_picking::ray_cast::{ray_mesh_intersection, Backfaces, RayMeshHit};
+use bevy_picking_more_hitinfo::mesh_picking::ray_cast::{ray_mesh_intersection, Backfaces, RayMeshHit};
 use bevy_render::mesh::{Indices, Mesh, PrimitiveTopology};
 
 /// Hit data for an intersection between a ray and a triangle.
