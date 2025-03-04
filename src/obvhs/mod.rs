@@ -13,12 +13,9 @@ use obvhs::{
 };
 
 #[cfg(target_arch = "wasm32")]
-use web_time::{Duration, Instant, SystemTime, SystemTimeError, TryFromFloatSecsError};
+use web_time::Duration;
 #[cfg(not(target_arch = "wasm32"))]
-use {
-    core::time::{Duration, TryFromFloatSecsError},
-    std::time::{Instant, SystemTime, SystemTimeError},
-};
+use core::time::Duration;
 
 use crate::{
     common::{get_triangles, triangle::Triangle},
