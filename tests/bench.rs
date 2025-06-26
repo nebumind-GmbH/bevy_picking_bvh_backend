@@ -1,5 +1,7 @@
 use std::time::Instant;
 
+use bevy_log::info;
+
 use bevy_picking_more_hitinfo::prelude::*;
 
 use bevy_internal::prelude::*;
@@ -89,7 +91,6 @@ fn init_app(meshes: Vec<String>) -> App {
     // Add bevy plugins
     app.add_plugins((
         TransformPlugin::default(),
-        HierarchyPlugin::default(),
         WindowPlugin::default(),
         LogPlugin::default(),
         AssetPlugin::default(),

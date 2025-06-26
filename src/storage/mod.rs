@@ -1,9 +1,9 @@
 use std::marker::PhantomData;
 
 use bevy_asset::{Asset, AssetId, AssetIndex};
-use bevy_ecs::system::Resource;
+use bevy_ecs::prelude::Resource;
 use bevy_reflect::Reflect;
-use bevy_utils::HashMap;
+use bevy_platform::collections::HashMap;
 use uuid::Uuid;
 
 pub trait AssetBvhCache: Send + Sync + 'static {}

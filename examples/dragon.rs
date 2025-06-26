@@ -1,7 +1,6 @@
 use bevy_color::palettes::tailwind::*;
 use bevy_asset::*;
 use bevy_app::*;
-use bevy_sprite::*;
 use bevy_ecs::prelude::Commands;
 use bevy_ecs::prelude::Res;
 use bevy_pbr::PointLight;
@@ -76,7 +75,7 @@ fn draw_mesh_intersections(pointers: Query<&PointerInteraction>, mut gizmos: Giz
 
 /// An observer to rotate an entity when it is dragged
 fn rotate_on_drag(drag: Trigger<Pointer<Drag>>, mut transforms: Query<&mut Transform>) {
-    let mut transform = transforms.get_mut(drag.entity()).unwrap();
+    let mut transform = transforms.get_mut(drag.target()).unwrap();
     transform.rotate_y(drag.delta.x * 0.02);
     transform.rotate_x(drag.delta.y * 0.02);
 }

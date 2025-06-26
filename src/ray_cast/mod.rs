@@ -16,7 +16,7 @@ use bevy_ecs::{prelude::*, system::lifetimeless::Read, system::SystemParam};
 use bevy_math::FloatOrd;
 use bevy_render::{prelude::*, primitives::Aabb};
 use bevy_transform::components::GlobalTransform;
-use bevy_utils::tracing::*;
+use bevy_log::tracing::*;
 
 #[cfg(feature = "bvh")]
 use crate::bvh::{ray_cast::ray_intersection_over_mesh_using_bvh_cache, BvhCache};
