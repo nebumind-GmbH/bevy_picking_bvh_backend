@@ -1,19 +1,18 @@
+#![allow(clippy::all)]
+
 use std::time::Instant;
 
 use bevy_log::info;
 
 use bevy_picking_more_hitinfo::prelude::*;
 
-use bevy_internal::prelude::*;
-use bevy_pbr::PbrPlugin;
+use bevy_core_pipeline::CorePipelinePlugin;
 use bevy_ecs::component::Component;
 use bevy_gltf::GltfPlugin;
-use bevy_core_pipeline::CorePipelinePlugin;
+use bevy_internal::prelude::*;
+use bevy_pbr::PbrPlugin;
 
-use bevy_app::{
-  App,
-  PluginsState
-};
+use bevy_app::{App, PluginsState};
 use bevy_log::LogPlugin;
 use bevy_math::sampling::UniformMeshSampler;
 use bevy_picking_bvh_backend::{

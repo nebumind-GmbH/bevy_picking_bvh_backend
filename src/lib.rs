@@ -1,3 +1,5 @@
+#![allow(clippy::all)]
+
 use bevy_app::prelude::*;
 use bevy_asset::AssetEvent;
 use bevy_ecs::{prelude::*, world::CommandQueue};
